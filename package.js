@@ -12,11 +12,18 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
-  api.addFiles('mailer-mandrill.js');
+  api.use('useful:mailer');
+  api.use('http');
+  api.use('underscore');
+
+  api.addFiles('mailer-mandrill.js', 'server');
+
+  api.export('Mandrill');
 });
 
 Package.onTest(function(api) {
   api.use('tinytest');
   api.use('useful:mailer-mandrill');
-  api.addFiles('mailer-mandrill-tests.js');
+  api.addFiles('mailer-mandrill-testkeys.js', 'server');
+  api.addFiles('mailer-mandrill-tests.js', 'server');
 });
