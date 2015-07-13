@@ -35,6 +35,13 @@ Mandrill.send = function (email) {
     // XXX support attachements and images
   };
 
+  // Mandrill wierdly doesn't support replyTo directly, you have to write
+  // it as a custom header :/
+  if (email.replyTo)
+    mandrillFormattedMessage.headers = _.extend(mandrillFormattedMessage.headers || {}, {
+      "Reply-To": email.replyTo
+    });
+
   var result = makeRequest('/messages/send.json', {
     message: mandrillFormattedMessage
   }).data;
@@ -59,8 +66,9 @@ Mandrill.send = function (email) {
  * @param {string} routeName the path on your server where inbound mail should be recieved
  */
 Mandrill.attachRoute = function (domainName, routeName, mailer) {
-  Router.route(routeName, function () {
-    console.log('x');
+  Router.route(routeName, {
+    where: 'server'
+  }).post(function () {
     var inboundEvents = JSON.parse(this.request.body.mandrill_events);
     var emails = _.map(inboundEvents, function (event) {
       var message = event.msg;
@@ -71,12 +79,9 @@ Mandrill.attachRoute = function (domainName, routeName, mailer) {
         , text: message.text
         , html: message.html
       };
-      console.log('recieved');
       mailer.send('recieve', email);
     });
-    this.response.end('test');
-  }, {
-    where: 'server'
+    this.response.end('success');
   });
 
   // Wrapping this in a startup + timeout accomplishes two goals:

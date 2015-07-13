@@ -13,6 +13,8 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
   api.use('useful:mailer');
+  api.imply('useful:mailer');
+  
   api.use('http');
   api.use('underscore');
   api.use('iron:router@1.0.8');
