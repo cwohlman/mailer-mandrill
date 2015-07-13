@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('useful:mailer');
   api.use('http');
   api.use('underscore');
+  api.use('iron:router@1.0.8');
 
   api.addFiles('mailer-mandrill.js', 'server');
 
