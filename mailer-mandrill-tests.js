@@ -8,9 +8,21 @@
 // });
 // 
 
-Tinytest.add('Mandrill Mailer - marks email with sent id', function (test) {
+Tinytest.add('Mandrill Mailer - marks sent email with id', function (test) {
   var email = MandrillMailer.send({
     from: 'support@example.com'
+    , to: 'user@example.com'
+    , text: 'My message'
+    , html: 'Hi there'
+  });
+
+  test.equal(_.isString(email.providerId), true);
+  test.equal(email.deliveredStatus, 'sent');
+});
+
+Tinytest.add('Mandrill Mailer - correctly sends email with name', function (test) {
+  var email = MandrillMailer.send({
+    from: '"Support" <support@example.com>'
     , to: 'user@example.com'
     , text: 'My message'
     , html: 'Hi there'

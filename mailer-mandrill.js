@@ -14,19 +14,41 @@ function makeRequest(endpoint, data) {
   });
 }
 
+function parseEmailAddress(addressOrArray) {
+  var emails = addressOrArray;
+  if (!_.isArray(emails))
+    emails = [emails];
+  return _.map(emails, function (email) {
+    var name = /"([^"]+)"/.exec(email);
+    var address = /<([^>]+)>/.exec(email);
+    if (address) {
+      name = name && name[1];
+      address = address[1];
+      return {
+        email: address
+        , name: name
+      };
+    } else {
+      return {
+        email: email
+      };
+    }
+  });
+}
+
 /**
  * Sends an email using the mandrill api
  * @method Mandrill.send
  * @param {object} email The email to send, an object formatted similarly to meteor's Email.send
  */
 Mandrill.send = function (email) {
+  var fromEmail = parseEmailAddress(email.from);
   var mandrillFormattedMessage = {
     html: email.html
     , text: email.text
-    , from_email: email.from
-    , to: [{
-      email: email.to
-    }]
+    , from_email: fromEmail[0].email
+    , from_name: fromEmail[0].name
+    , to: parseEmailAddress(email.to)
     , track_opens: !!Mandrill.config.tracking
     , track_clicks: !!Mandrill.config.tracking
     , headers: email.headers
