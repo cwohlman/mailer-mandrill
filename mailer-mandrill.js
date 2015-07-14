@@ -46,6 +46,7 @@ Mandrill.send = function (email) {
   var mandrillFormattedMessage = {
     html: email.html
     , text: email.text
+    , subject: email.subject
     , from_email: fromEmail[0].email
     , from_name: fromEmail[0].name
     , to: parseEmailAddress(email.to)
