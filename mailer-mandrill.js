@@ -170,7 +170,9 @@ Mandrill.init = function (options) {
   }
 
   if (options.inboundDomain) {
-    Mandrill.attachRoute(options.inboundDomain, options.inboundRoute, mailer);
+    try {
+      Mandrill.attachRoute(options.inboundDomain, options.inboundRoute, mailer);
+    } catch (e) { console.error(e); }
   }
 
   return mailer;
