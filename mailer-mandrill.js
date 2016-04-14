@@ -42,6 +42,8 @@ function parseEmailAddress(addressOrArray) {
  * @param {object} email The email to send, an object formatted similarly to meteor's Email.send
  */
 Mandrill.send = function (email) {
+  if(!Mandrill.config.apiKey) return;
+
   var fromEmail = parseEmailAddress(email.from);
   var mandrillFormattedMessage = {
     html: email.html
